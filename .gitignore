@@ -1,0 +1,4 @@
+.pgdate
+.env
+bucket-credential.json
+git_login.sh
