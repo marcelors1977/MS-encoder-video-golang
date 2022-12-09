@@ -1,0 +1,6 @@
+.env.example
+.gitignore
+docker-compose.yaml
+Dockerfile
+git_login.sh
+README.md

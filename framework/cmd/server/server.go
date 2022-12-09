@@ -15,7 +15,7 @@ import (
 var db database.Database
 
 func init() {
-	err := godotenv.Load("../../../.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
@@ -35,7 +35,7 @@ func init() {
 	db.DsnTest = os.Getenv("DSN_TEST")
 	db.Dsn = os.Getenv("DSN")
 	db.DbTypeTest = os.Getenv("DB_TYPE_TEST")
-	db.DbType = os.Getenv("DB_TPE")
+	db.DbType = os.Getenv("DB_TYPE")
 	db.Env = os.Getenv("ENV")
 }
 
