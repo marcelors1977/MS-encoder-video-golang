@@ -101,9 +101,9 @@ func (j *JobManager) checkParseErrors(jobResult JobWorkerResult) error {
 		Error:   jobResult.Error.Error(),
 	}
 
-	jobJson, err := json.Marshal(errMsg)
+	jobJson, _ := json.Marshal(errMsg)
 
-	err = j.notify(jobJson)
+	err := j.notify(jobJson)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func (j *JobManager) notify(jobJson []byte) error {
 		string(jobJson),
 		"application/json",
 		os.Getenv("RABBITMQ_NOTIFICATION_EX"),
-		os.Getenv("RABBIT_NOTIFICATION_ROUTING_KEY"),
+		os.Getenv("RABBITMQ_NOTIFICATION_ROUTING_KEY"),
 	)
 
 	if err != nil {

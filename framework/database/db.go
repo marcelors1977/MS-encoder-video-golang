@@ -3,6 +3,8 @@ package database
 import (
 	"encoder/domain"
 	"log"
+	"os"
+	"strconv"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -26,11 +28,21 @@ func NewDb() *Database {
 
 func NewDbTest() *gorm.DB {
 	dbInstance := NewDb()
-	dbInstance.Env = "test"
-	dbInstance.DbTypeTest = "sqlite3"
-	dbInstance.DsnTest = ":memory:"
-	dbInstance.AutoMigrateDb = true
-	dbInstance.Debug = true
+	dbInstance.Env = os.Getenv("ENV")
+	dbInstance.DbTypeTest = os.Getenv("DB_TYPE_TEST")
+	dbInstance.DsnTest = os.Getenv("DSN_TEST")
+	AutoMigrateDb, err := strconv.ParseBool(os.Getenv("AUTO_MIGRATE_DB"))
+
+	if err != nil {
+		log.Fatalf("Error when converting AutoMigrateDb var. Erro %s", err.Error())
+	}
+	dbInstance.AutoMigrateDb = AutoMigrateDb
+
+	Debug, err := strconv.ParseBool(os.Getenv("DEBUG"))
+	if err != nil {
+		log.Fatalf("Error when converting Debug var. Erro %s", err.Error())
+	}
+	dbInstance.Debug = Debug
 
 	connection, err := dbInstance.Connect()
 
@@ -45,7 +57,7 @@ func (d *Database) Connect() (*gorm.DB, error) {
 	var err error
 
 	if d.Env != "test" {
-		d.Db, err = gorm.Open(d.DbType)
+		d.Db, err = gorm.Open(d.DbType, d.Dsn)
 	} else {
 		d.Db, err = gorm.Open(d.DbTypeTest, d.DsnTest)
 	}
